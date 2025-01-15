@@ -2,8 +2,12 @@ package org.lengueCode.daos;
 
 import org.lengueCode.Connection.DataBaseConnection;
 import org.lengueCode.entites.Emprunt;
+import org.lengueCode.enums.StatusEmprunt;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmpruntDao {
     Connection connection = DataBaseConnection.getConnection();
@@ -56,5 +60,33 @@ public class EmpruntDao {
             e.printStackTrace();
         }
 
+
+    }
+
+    public List<Emprunt> afficherEmpruntEnRetard() {
+        List<Emprunt> empruntsEnRetard = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM emprunt WHERE date_retour_eff IS NULL");
+           // statement.setDate(1, Date.valueOf(LocalDate.now())); // Compare avec la date actuelle
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                Emprunt emprunt = new Emprunt();
+                emprunt.setIdEmprunt(rs.getLong("id_emprunt"));
+                emprunt.setMembreId(rs.getLong("membre_id"));
+                emprunt.setLivreId(rs.getLong("livre_id"));
+                emprunt.setDateEmprunt(rs.getDate("date_emprunt").toLocalDate());
+                emprunt.setDateRetourPrev(rs.getDate("date_retour_prev").toLocalDate());
+                if (rs.getDate("date_retour_eff") != null) {
+                    emprunt.setDateRetourEff(rs.getDate("date_retour_eff").toLocalDate());
+                }
+                emprunt.setStatus(StatusEmprunt.valueOf(rs.getString("status")));
+                empruntsEnRetard.add(emprunt);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return empruntsEnRetard;
     }
 }

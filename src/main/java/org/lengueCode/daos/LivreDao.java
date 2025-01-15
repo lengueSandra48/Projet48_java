@@ -54,12 +54,13 @@ public class LivreDao {
     }
 
     // Rechercher un livre par titre
-    public Livre rechercherLivreParTitre(String titre){
+    public Livre
+    rechercherLivreParTitre(String titre){
         Livre livre = null;
 
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM livre WHERE titre = ?");
+                    "SELECT * FROM livre WHERE LOWER(titre) = LOWER(?)");
             statement.setString(1, titre);
 
             ResultSet resultSet = statement.executeQuery();
