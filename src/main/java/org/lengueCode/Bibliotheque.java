@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 public class Bibliotheque {
     public static void main(String[] args) {
         MembreDao membreDao = new MembreDao();
-        membreDao.supprimerMembre(1234L);
         LivreDao livreDao = new LivreDao();
         EmpruntDao empruntDao = new EmpruntDao();
         Scanner scanner = new Scanner(System.in);
